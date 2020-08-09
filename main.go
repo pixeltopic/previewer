@@ -159,7 +159,15 @@ func preview(ses *discordgo.Session, msg *discordgo.MessageCreate) {
 				}
 			}
 
-			_, _ = ses.ChannelMessageSendEmbed(msg.ChannelID, embed)
+			allow, err := shouldPreview(ses, msg.ChannelID, m.ChannelID)
+			if err != nil {
+				log.Printf("Command failed: %+v\n", err)
+				return
+			}
+
+			if allow {
+				_, _ = ses.ChannelMessageSendEmbed(msg.ChannelID, embed)
+			}
 		}
 	}
 }
