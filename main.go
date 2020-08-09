@@ -14,8 +14,11 @@ import (
 	"github.com/bwmarrin/discordgo"
 )
 
-// Variables used for command line parameters
+// Limits the amount of previews that can be sent for a single message.
+const maxEmbedPerMsg = 3
+
 var (
+	// Token stores the Discord API token
 	Token string
 	reg   = regexp.MustCompile(`https://(discordapp\.com|discord\.com)/channels/(\d+)/(\d+)/(\d+)`)
 )
@@ -89,7 +92,10 @@ func preview(ses *discordgo.Session, msg *discordgo.MessageCreate) {
 		return
 	}
 
-	for _, meta := range metaToPreview {
+	for i, meta := range metaToPreview {
+		if i == maxEmbedPerMsg {
+			return
+		}
 		msgs, err := ses.ChannelMessages(meta.channelID, 1, "", "", meta.messageID)
 		if err != nil {
 			log.Printf("Command failed: %+v\n", err)
@@ -101,7 +107,6 @@ func preview(ses *discordgo.Session, msg *discordgo.MessageCreate) {
 		}
 
 		m := msgs[0]
-		//fmt.Printf("found message: %+v\n", m)
 
 		if m.ID == meta.messageID {
 
