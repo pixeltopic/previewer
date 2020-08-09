@@ -49,7 +49,7 @@ func comesFromDM(s *discordgo.Session, m *discordgo.Message) bool {
 }
 
 func extractLinkMeta(s string) ([]linkMeta, error) {
-	matches := reg.FindAllStringSubmatch(s, -1)
+	matches := reg.FindAllStringSubmatch(s, maxEmbedPerMsg)
 
 	var lm []linkMeta
 

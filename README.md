@@ -1,5 +1,7 @@
 # Previewer
 
+![previewer](./images/previewer-demo.gif)
+
 Previewer is a simple bot written for Discord that allows previewing linked messages. 
 Current behavior requires clicking the message link in order to view it. Previewer
 takes care of this for you by automatically giving you a peek of what the linked message contains, saving
