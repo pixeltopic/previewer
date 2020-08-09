@@ -129,6 +129,14 @@ func preview(ses *discordgo.Session, msg *discordgo.MessageCreate) {
 
 			t, _ := m.Timestamp.Parse()
 
+			var chanName string
+			ch, err := ses.State.Channel(m.ChannelID)
+			if err != nil {
+				chanName = "#Unknown Channel"
+			} else {
+				chanName = "#" + ch.Name
+			}
+
 			embed := &discordgo.MessageEmbed{
 				URL:         meta.link,
 				Title:       "Linked Message Preview",
@@ -137,7 +145,7 @@ func preview(ses *discordgo.Session, msg *discordgo.MessageCreate) {
 				Color:       7188182,
 				Footer: &discordgo.MessageEmbedFooter{
 					IconURL: m.Author.AvatarURL("128"),
-					Text:    "Message sent by " + m.Author.Username + "#" + m.Author.Discriminator,
+					Text:    fmt.Sprintf("Message sent by %s#%s in %s", m.Author.Username, m.Author.Discriminator, chanName),
 				},
 			}
 

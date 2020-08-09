@@ -18,13 +18,20 @@ func shouldPreview(s *discordgo.Session, destChannelID, srcChannelID string) (bo
 		return true, nil
 	}
 
-	srcCh, err := s.Channel(srcChannelID)
+	srcCh, err := s.State.Channel(srcChannelID)
 	if err != nil {
-		return false, err
+		srcCh, err = s.Channel(srcChannelID)
+		if err != nil {
+			return false, err
+		}
 	}
-	destCh, err := s.Channel(destChannelID)
+
+	destCh, err := s.State.Channel(srcChannelID)
 	if err != nil {
-		return false, err
+		destCh, err = s.Channel(destChannelID)
+		if err != nil {
+			return false, err
+		}
 	}
 
 	var (
