@@ -36,6 +36,10 @@ func shouldPreview(s *discordgo.Session, destChannelID, srcChannelID string) (bo
 		_ = s.State.ChannelAdd(destCh)
 	}
 
+	if srcCh.NSFW && !destCh.NSFW {
+		return false, nil
+	}
+
 	var (
 		deniedSrcRoles  = mapset.NewThreadUnsafeSet()
 		deniedDestRoles = mapset.NewThreadUnsafeSet()

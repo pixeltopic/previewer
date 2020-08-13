@@ -15,7 +15,10 @@ import (
 )
 
 // Limits the amount of previews that can be sent for a single message.
-const maxEmbedPerMsg = 3
+const (
+	maxEmbedPerMsg = 3
+	maxPreviewLen  = 500 // this should not be above 2048 due to embed limitations
+)
 
 var (
 	// Token stores the Discord API token
@@ -115,8 +118,12 @@ func preview(ses *discordgo.Session, msg *discordgo.MessageCreate) {
 				content = c
 			}
 
-			if 128 <= len(content) {
-				content = strings.TrimSpace(content[:128]) + "..."
+			// TODO: Improve preview truncation by preserving spoilers and code blocks
+			if maxPreviewLen <= len(content) {
+				content = strings.TrimSpace(content[:maxPreviewLen]) + "..."
+			}
+			if len(content) == 0 {
+				content = "No preview."
 			}
 
 			var (
